@@ -21,6 +21,11 @@ namespace SnakeVolume
 
   public partial class SnakeVolumeSlider : UserControl
   {
+    #region The Volume Changing Code
+
+    // All code in this region is courtesy of StackOverflow user Paedow
+    // https://stackoverflow.com/questions/13139181/how-to-programmatically-set-the-system-volume
+
     private const int APPCOMMAND_VOLUME_MUTE = 0x80000;
     private const int APPCOMMAND_VOLUME_UP = 0xA0000;
     private const int APPCOMMAND_VOLUME_DOWN = 0x90000;
@@ -47,23 +52,30 @@ namespace SnakeVolume
       SendMessageW(this.Handle, WM_APPCOMMAND, this.Handle,
           (IntPtr)APPCOMMAND_VOLUME_UP);
     }
+    #endregion
 
+    #region Constant Values
+    
     // Snake settings
-    private int Length;
-    private Direction Direction;
-    private List<Point> Body;
-    private int StartingLength = 5;
+    public static readonly int StartingLength = 5;
 
     // Grid settings
-    private int GridSize;
-    private int BlockSize;
-    private int BlockMargin;
-    private int Speed;
+    public static readonly int GridSize = 20;
+    public static readonly int BlockSize = 10;
+    public static readonly int BlockMargin = 1;
 
     // Color settings
-    private Color UpColor;
-    private Color DownColor;
-    private Color SnakeColor;
+    public static readonly Color UpColor = Color.Green;
+    public static readonly Color DownColor = Color.Red;
+    public static readonly Color SnakeColor = Color.Blue;
+
+    #endregion
+
+    #region Snake Variables and Properties
+    private int Length;
+    private Direction Direction = Direction.Right;
+    private List<Point> Body;
+    private const int Speed = 10;
 
     private Point UpToken;
     private Point DownToken;
@@ -72,19 +84,16 @@ namespace SnakeVolume
 
     private bool HasMoved;
 
+    // for optimised drawing
+    private bool HasUpTokenMoved;
+    private bool HasDownTokenMoved;
+    #endregion
+
     public SnakeVolumeSlider()
     {
-      Body = new List<Point>();
-      Direction = Direction.Right;
+      Reset();
 
-      GridSize = 10;
-      BlockSize = 20;
-      BlockMargin = 2;
-      Speed = 5;
-
-      UpColor = Color.Green;
-      DownColor = Color.Red;
-      SnakeColor = Color.Blue;
+      BackColor = Color.Black;
 
       Width = BlockMargin + GridSize * (BlockSize + BlockMargin);
       Height = BlockMargin + GridSize * (BlockSize + BlockMargin);
@@ -93,11 +102,114 @@ namespace SnakeVolume
 
       timer.Interval = 1000 / Speed;
 
-      Start();
+      timer.Start();
     }
-    
-    public void Step()
+
+    /// <summary>
+    /// To be run when the snake eats itself. Resets the playfield.
+    /// </summary>
+    private void Reset()
     {
+      Body = new List<Point>();
+      Length = StartingLength;
+      HasMoved = false;
+
+      Body.Add(new Point(GridSize / 2, GridSize / 2));
+
+      RespawnUpToken();
+      RespawnDownToken();
+    }
+
+    /// <summary>
+    /// Respawns the token to a valid location.
+    /// </summary>
+    private void RespawnUpToken()
+    {
+      Random rand = new Random();
+      while (true)
+      {
+        Point point = new Point(rand.Next(GridSize), rand.Next(GridSize));
+
+        if (point != DownToken && !Body.Contains(point))
+        {
+          UpToken = point;
+          HasUpTokenMoved = true;
+          return;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Respawns the token to a valid location.
+    /// </summary>
+    private void RespawnDownToken()
+    {
+      Random rand = new Random();
+      while (true)
+      {
+        Point point = new Point(rand.Next(GridSize), rand.Next(GridSize));
+
+        if (point != UpToken && !Body.Contains(point))
+        {
+          DownToken = point;
+          HasDownTokenMoved = true;
+          return;
+        }
+      }
+    }
+
+    /// <summary>
+    /// Draws a square according to the constants.
+    /// </summary>
+    /// <param name="point"></param>
+    /// <param name="color"></param>
+    private void DrawSquare(Point point, Color color)
+    {
+      Graphics.FillRectangle(new Pen(color).Brush, new Rectangle(BlockMargin + point.X * (BlockMargin + BlockSize), BlockMargin + point.Y * (BlockMargin + BlockSize), BlockSize, BlockSize));
+    }
+
+    /// <summary>
+    /// Initializes the snake and the tokens. Begins the timer.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void SnakeGame_Load(object sender, EventArgs e)
+    {
+      Reset();
+    }
+
+    /// <summary>
+    /// The redraw event for the control. Draws all the graphics.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void SnakeGame_Paint(object sender, PaintEventArgs e)
+    {
+      this.Graphics = e.Graphics;
+
+      Graphics.DrawRectangle(Pens.DarkGray, new Rectangle(0, 0, Width - 1, Height - 1));
+
+      // draw the new uptoken if required
+      if (HasUpTokenMoved)
+        DrawSquare(UpToken, UpColor);
+
+      // draw the new downtoken if required
+      if (HasDownTokenMoved)
+        DrawSquare(DownToken, DownColor);
+
+      // draw the new head
+      foreach (Point body in Body)
+        DrawSquare(body, SnakeColor);
+    }
+
+    /// <summary>
+    /// Performed according to the speed constant. Moves the snake, checks for collisions and grows the snake if required.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void timer_Tick(object sender, EventArgs e)
+    {
+      #region Move the snake
       int new_x = Body[0].X,
         new_y = Body[0].Y;
 
@@ -129,9 +241,11 @@ namespace SnakeVolume
       Point new_head = new Point(new_x, new_y);
 
       HasMoved = false;
+      #endregion
 
-      // Check collisions
+      #region Check for collisions
 
+      // has collided with an UpToken?
       if (new_head == UpToken)
       {
         VolUp();
@@ -139,6 +253,7 @@ namespace SnakeVolume
         Length++;
       }
 
+      // has collided with a DownToken?
       if (new_head == DownToken)
       {
         VolDown();
@@ -146,16 +261,19 @@ namespace SnakeVolume
         Length++;
       }
 
+      // has collided with itself?
       foreach (var point in Body.Skip(1))
       {
         if (point == new_head)
         {
           Mute();
           Reset();
-          return;
+          return; // return because we don't want to increase the length after this
         }
       }
+      #endregion
 
+      // Add the new_head and possibly remove the tail
       Body.Reverse();
       Body.Add(new_head);
       Body.Reverse();
@@ -165,89 +283,15 @@ namespace SnakeVolume
         Body.RemoveAt(Body.Count - 1);
       }
 
-
+      // Redraw the control
       Refresh();
-
     }
 
-    public void Start()
-    {
-      timer.Start();
-    }
-
-    private void Reset()
-    {
-      Body = new List<Point>();
-      Length = StartingLength;
-      HasMoved = false;
-
-      Body.Add(new Point(GridSize / 2, GridSize / 2));
-
-      RespawnUpToken();
-      RespawnDownToken();
-    }
-
-    private void RespawnUpToken()
-    {
-      Random rand = new Random();
-      while (true)
-      {
-        Point point = new Point(rand.Next(GridSize), rand.Next(GridSize));
-
-        if (point != DownToken && !Body.Contains(point))
-        {
-          UpToken = point;
-          return;
-        }
-      }
-    }
-
-    private void RespawnDownToken()
-    {
-      Random rand = new Random();
-      while (true)
-      {
-        Point point = new Point(rand.Next(GridSize), rand.Next(GridSize));
-
-        if (point != UpToken && !Body.Contains(point))
-        {
-          DownToken = point;
-          return;
-        }
-      }
-    }
-
-    private void SnakeGame_Load(object sender, EventArgs e)
-    {
-      Reset();
-    }
-
-    private void SnakeGame_Paint(object sender, PaintEventArgs e)
-    {
-      this.Graphics = e.Graphics;
-
-      Graphics.FillRectangle(Brushes.Black, new Rectangle(0, 0, Width, Height));
-      Graphics.DrawRectangle(Pens.DarkGray, new Rectangle(0, 0, Width - 1, Height - 1));
-
-      DrawSquare(UpToken, UpColor);
-      DrawSquare(DownToken, DownColor);
-
-      foreach (Point point in Body)
-      {
-        DrawSquare(point, SnakeColor);
-      }
-    }
-
-    private void DrawSquare(Point point, Color color)
-    {
-      Graphics.FillRectangle(new Pen(color).Brush, new Rectangle(BlockMargin + point.X * (BlockMargin + BlockSize), BlockMargin + point.Y * (BlockMargin + BlockSize), BlockSize, BlockSize));
-    }
-
-    private void timer_Tick(object sender, EventArgs e)
-    {
-      Step();
-    }
-
+    /// <summary>
+    /// Moves the snake depending on which arrow key is pressed. Doesn't allow the user to turn 180 degrees on itself. Exits the application if the Enter or Escape keys are pressed.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void SnakeGame_KeyUp(object sender, KeyEventArgs e)
     {
       if (HasMoved)

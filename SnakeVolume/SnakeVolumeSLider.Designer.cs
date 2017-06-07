@@ -36,11 +36,12 @@
       // 
       this.timer.Tick += new System.EventHandler(this.timer_Tick);
       // 
-      // SnakeGame
+      // SnakeVolumeSlider
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.Name = "SnakeGame";
+      this.DoubleBuffered = true;
+      this.Name = "SnakeVolumeSlider";
       this.Load += new System.EventHandler(this.SnakeGame_Load);
       this.Paint += new System.Windows.Forms.PaintEventHandler(this.SnakeGame_Paint);
       this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SnakeGame_KeyUp);

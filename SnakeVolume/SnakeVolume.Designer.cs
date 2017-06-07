@@ -34,6 +34,7 @@
       // 
       // snakeGame1
       // 
+      this.snakeGame1.BackColor = System.Drawing.Color.Black;
       this.snakeGame1.Location = new System.Drawing.Point(12, 12);
       this.snakeGame1.Name = "snakeGame1";
       this.snakeGame1.Size = new System.Drawing.Size(222, 222);

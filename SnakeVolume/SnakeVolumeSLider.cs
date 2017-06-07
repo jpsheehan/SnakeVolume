@@ -83,10 +83,6 @@ namespace SnakeVolume
     private Graphics Graphics;
 
     private bool HasMoved;
-
-    // for optimised drawing
-    private bool HasUpTokenMoved;
-    private bool HasDownTokenMoved;
     #endregion
 
     public SnakeVolumeSlider()
@@ -133,7 +129,6 @@ namespace SnakeVolume
         if (point != DownToken && !Body.Contains(point))
         {
           UpToken = point;
-          HasUpTokenMoved = true;
           return;
         }
       }
@@ -152,7 +147,6 @@ namespace SnakeVolume
         if (point != UpToken && !Body.Contains(point))
         {
           DownToken = point;
-          HasDownTokenMoved = true;
           return;
         }
       }
@@ -189,13 +183,11 @@ namespace SnakeVolume
 
       Graphics.DrawRectangle(Pens.DarkGray, new Rectangle(0, 0, Width - 1, Height - 1));
 
-      // draw the new uptoken if required
-      if (HasUpTokenMoved)
-        DrawSquare(UpToken, UpColor);
+      // draw the new uptoken
+      DrawSquare(UpToken, UpColor);
 
-      // draw the new downtoken if required
-      if (HasDownTokenMoved)
-        DrawSquare(DownToken, DownColor);
+      // draw the new downtoken
+      DrawSquare(DownToken, DownColor);
 
       // draw the new head
       foreach (Point body in Body)

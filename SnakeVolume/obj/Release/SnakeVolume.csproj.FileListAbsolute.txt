@@ -1,0 +1,10 @@
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\bin\Release\SnakeVolume.exe.config
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\bin\Release\SnakeVolume.exe
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\bin\Release\SnakeVolume.pdb
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\obj\Release\SnakeVolume.csprojResolveAssemblyReference.cache
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\obj\Release\SnakeVolume.Properties.Resources.resources
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\obj\Release\SnakeVolume.SnakeVolumeSlider.resources
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\obj\Release\SnakeVolume.FormSnakeVolume.resources
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\obj\Release\SnakeVolume.csproj.GenerateResource.Cache
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\obj\Release\SnakeVolume.exe
+C:\Users\Jesse\documents\visual studio 2015\Projects\SnakeVolume\SnakeVolume\obj\Release\SnakeVolume.pdb

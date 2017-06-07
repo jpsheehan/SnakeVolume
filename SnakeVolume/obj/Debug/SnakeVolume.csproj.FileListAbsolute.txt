@@ -1,0 +1,10 @@
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\bin\Debug\SnakeVolume.exe.config
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\bin\Debug\SnakeVolume.exe
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\bin\Debug\SnakeVolume.pdb
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\obj\Debug\SnakeVolume.csprojResolveAssemblyReference.cache
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\obj\Debug\SnakeVolume.Properties.Resources.resources
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\obj\Debug\SnakeVolume.SnakeVolumeSlider.resources
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\obj\Debug\SnakeVolume.FormSnakeVolume.resources
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\obj\Debug\SnakeVolume.csproj.GenerateResource.Cache
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\obj\Debug\SnakeVolume.exe
+C:\Users\Jesse\Source\Repos\SnakeVolume\SnakeVolume\obj\Debug\SnakeVolume.pdb
